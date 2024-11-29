@@ -112,3 +112,20 @@ let from_file path =
   close_in infile ;
   final_graph
   
+let export gr path= 
+  let ff = open_out path in
+
+  (* Write all nodes (with fake coordinates) *)
+
+  fprintf ff "digraph finite_state_machine { \n
+  fontname=\"Helvetica,Arial,sans-serif\"\n
+  node [fontname=\"Helvetica,Arial,sans-serif\"] \n 
+  edge [fontname=\"Helvetica,Arial,sans-serif\"]\n 
+  rankdir=LR; \n 
+  node [shape = circle]; \n";
+  
+  e_iter gr (fun id -> fprintf ff "%d -> %d [label = \"%s\"];\n" id.src id.tgt id.lbl ) ;
+  fprintf ff "\n }" ;
+
+  close_out ff ;
+  ()
