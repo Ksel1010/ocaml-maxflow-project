@@ -2,7 +2,7 @@
 
 src?=0
 dst?=5
-graph?=graph1.txt
+graph?=graph2.txt
 
 all: build
 
@@ -19,9 +19,11 @@ edit:
 
 demo: build
 	@echo "\n   ⚡  EXECUTING  ⚡\n"
-	./ftest.exe graphs/${graph} $(src) $(dst) outfile
-	@echo "\n   🥁  RESULT (content of outfile)  🥁\n"
-	@cat outfile
+	./ftest.exe graphs/${graph} $(src) $(dst) outfile.dot
+	@echo "\n   🥁  RESULT (content of outfile.dot)  🥁\n"
+	@cat outfile.dot
+	@dot -Tsvg outfile.dot > outfile.svg
+	
 
 clean:
 	find -L . -name "*~" -delete
