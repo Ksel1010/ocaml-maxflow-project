@@ -31,18 +31,22 @@ let () =
   let graph = from_file infile in
   let graph_int = gmap graph (fun  x -> int_of_string x)  in
 (*
-  let chemin = find_path graph_int [2;4;3] 0 5 in
+  let graphE = (graphEcart graph_int 0 12) in
+  let chemin = find_path graphE [] 0 12 in
   let () = match chemin with
   |None-> Printf.printf " vide "
-  |Some x-> List.iter (Printf.printf "%d ") x in
+  |Some x-> List.iter (Printf.printf "%d ") x 
   (* Rewrite the graph that has been read. *)
-  let () = export graph outfile in ()
-  *)
-
+  (*let () = export graph outfile in ()
+  
+*)*)
   
   let () = Printf.printf " avant appel graphFlow %!" in
-  let graphF = (graphFlow graph_int 0 12) 
-in let () = export graphF outfile
+  let graphE = (graphFlow graph_int _source _sink) 
+(*in let graphF = gmap graphE string_of_int *)
+
+
+in let () = export graphE outfile
 in ()
-  
+
 

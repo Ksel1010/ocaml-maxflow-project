@@ -15,10 +15,11 @@ let find_path graph forbidden id1 id2 =
   in
   let rec aux acc forbidden = function
     |[]-> None
-    |arc::res-> if arc.tgt = id2 then Some (List.rev (id2::acc))
+    |arc::res-> if (arc.lbl=0||not(notForbidden arc.tgt forbidden)) then aux acc forbidden res
+    else  if arc.tgt = id2 then Some (List.rev (id2::acc))
                   else if (notForbidden arc.tgt forbidden) then
                         let ch = aux (arc.tgt::acc) (arc.tgt::forbidden) (out_arcs graph arc.tgt) in 
-                        if ch=None || arc.lbl=0 then aux acc (arc.tgt::forbidden)  res else ch
+                        if ch=None then aux acc forbidden  res else ch
                   else aux acc forbidden res
   in aux [id1] (id1::forbidden) (out_arcs graph id1)
 
@@ -72,7 +73,9 @@ in let rec aux g = function
   |x::res-> match res with 
             |[]-> graphEcart g id1 id2
             |y::_-> let g1 = add_arc g x y (-mf) in
+
                     let g2 = add_arc g1 y x mf in 
+                    
                     aux g2 res
 in aux graph ch 
 
