@@ -80,20 +80,46 @@ in let rec aux g = function
 in aux graph ch 
 
 
+let max_node graph = n_fold graph (fun acu id -> if (id>acu) then id else acu) min_int
+
+
+let removeCycle graph = e_fold graph (
+  fun aux arc -> match find_arc graph arc.tgt arc.src with
+    |None -> new_arc aux arc
+    |Some _ -> let newId = (max_node aux)+1
+                in let auxNode = new_node aux newId
+                in let aux_arc = new_arc auxNode {src=arc.src;tgt=newId; lbl=arc.lbl}  
+                in new_arc aux_arc {src=newId; tgt = arc.tgt; lbl = arc.lbl} 
+) (clone_nodes graph) 
 
 
 
-
-  
 
 let graphFlow graph id1 id2 = 
   let () = Printf.printf " appel graphFlow %!" in
-  let graphE = graphEcart graph id1 id2 
+  let graphNoCycle = removeCycle graph in
+  let graphE = graphEcart graphNoCycle id1 id2 
 in  
-e_fold graph (fun aux arc -> new_arc aux {src = arc.src; tgt = arc.tgt; 
-        lbl = string_of_int(match (find_arc graphE arc.tgt arc.src) with
-        |None-> 0
-        |Some arc_i -> arc_i.lbl)^"/"^string_of_int(arc.lbl)}) (clone_nodes graph)
+e_fold graph (fun aux arc -> new_arc aux {src = arc.src; 
+        tgt = arc.tgt; 
+        lbl = string_of_int (match 
+        (match find_arc graphE arc.src arc.tgt with
+
+            |Some _ -> find_arc graphE arc.tgt arc.src
+            |None -> match (List.find_opt 
+                      (fun arcReturn -> if (node_exists graph arcReturn.tgt) then false 
+                                else (match find_arc graphE arcReturn.tgt arc.tgt with 
+                                     |None -> false
+                                     |Some _ -> true )) (out_arcs graphNoCycle arc.src)) with
+                     |None -> None
+                     |Some auxArc -> find_arc graphE  auxArc.tgt auxArc.src
+        )      
+      
+      with
+        |Some arc_i -> arc_i.lbl
+        |None -> 0
+        )^"/"^string_of_int(arc.lbl)}) (clone_nodes graph)
+        
 
                  
 
