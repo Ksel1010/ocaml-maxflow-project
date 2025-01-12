@@ -34,20 +34,6 @@ let getArcs graph li =
   |[]-> []
   |id::res-> aux id [] res
 
-(*let minFlow graph li = 
-  let rec aux acc id1 = function
-  |[]-> acc
-  |x::res-> match  (find_arc graph id1 x) with
-      |None->raise  (Graph_error "Arc doesn't exist")
-      |Some ar ->  if ar.lbl<acc   then aux ar.lbl x res
-
-
-                   else aux acc x res
-in match li with
-  |[]-> 0
-  |_::[]-> 0
-  |id::res-> aux max_int id res
-  *)
 
   let minFlow graph li = 
     let arcs = getArcs graph li 
