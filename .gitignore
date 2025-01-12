@@ -1,4 +1,6 @@
 _build/
-outfile
+outfile*
 *~
 *.exe
+outfile.dot
+outfile.svg
